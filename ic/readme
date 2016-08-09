@@ -1,0 +1,18 @@
+Compile:
+
+sh go.sh compile
+excecutables in exe
+
+Run:
+sh go.sh run
+output in sdelog
+
+
+Generate charts:
+
+rm -f sdelog.bak/* && cp sdelog/* sdelog.bak/
+rm -f ic/*
+python filter.py
+python parse.py
+sh do_ic.sh
+python parse_ic.py
