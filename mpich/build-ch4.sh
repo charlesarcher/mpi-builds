@@ -51,14 +51,14 @@ case $COMPILER in
         fi
         . ${HOME}/intel_compilervars.sh intel64
         . ${HOME}/code/setup_intel.sh
-        export LDFLAGS="${LDFLAGS} -Wl,-z,muldefs"
+        export LDFLAGS="${LDFLAGS} -Wl,-z,muldefs -Wl,-z,now"
         ;;
     gnu )
-        if [ -e /opt/rh/devtoolset-4/enable ]; then
+          if [ -e /opt/rh/devtoolset-4/enable ]; then
             . /opt/rh/devtoolset-4/enable
         fi
         . ${HOME}/code/setup_gnu.sh
-        export LDFLAGS="${LDFLAGS} -z muldefs"
+        export LDFLAGS="${LDFLAGS} -Wl,-z,muldefs -Wl,-z,now"
         EXTRA_OPT="${EXTRA_OPT}"
         EXTRA_DEBUG="${EXTRA_DEBUG}"
         ;;
@@ -76,11 +76,11 @@ esac
 export PM=hydra
 
 #Cross
-BUILD_HOST=i386-pc-linux-gnu
-BUILD_BUILD=i686-pc-linux-gnu
+BUILD_HOST=i686-pc-linux-gnu
+BUILD_BUILD=i386-pc-linux-gnu
 
 if [ ! "$2" ];then
-    LIBRARY="debug-ofi-tpo-noinline-ep-indirect-embedded-map-disabled-tagged-base"
+    LIBRARY="debug-ofi-tpo-noinline-ep-indirect-embedded-map-enabled-tagged-base"
 else
     LIBRARY=$2
 fi
@@ -92,7 +92,7 @@ DEBUGLDFLAGS_COMMON="-O0  ${EXTRA_LD_DEBUG}"
 
 export EXTERNAL_LIBRARIES=/home/cjarcher/code/install/gnu/uuid/lib/libuuid.a
 
-
+VISIBILITY="-fvisibility=hidden"
 STATIC_FABRIC=0
 IFS_SAVE=${IFS}
 IFS="-"
@@ -103,7 +103,7 @@ for OPTION in $CONFIG; do
         0)
             case ${OPTION} in
                 optimized)
-                    export MPICHLIB_CFLAGS="${OPTFLAGS_COMMON} -std=gnu99 ${WALLC} -fvisibility=hidden"
+                    export MPICHLIB_CFLAGS="${OPTFLAGS_COMMON} -std=gnu99 ${WALLC} ${VISIBILITY}"
                     export MPICHLIB_CXXFLAGS="${OPTFLAGS_COMMON}  ${WALLC}"
                     export MPICHLIB_FCFLAGS="${OPTFLAGS_COMMON} ${WALLF}"
                     export MPICHLIB_FFLAGS="${OPTFLAGS_COMMON} ${WALLF}"
@@ -112,7 +112,7 @@ for OPTION in $CONFIG; do
                     export BUILD_TYPE=optimized
                     ;;
                 debug)
-                    export MPICHLIB_CFLAGS="${DEBUGFLAGS_COMMON} -std=gnu99 ${WALLC} -fvisibility=hidden"
+                    export MPICHLIB_CFLAGS="${DEBUGFLAGS_COMMON} -std=gnu99 ${WALLC} ${VISIBILITY}"
                     export MPICHLIB_CXXFLAGS="${DEBUGFLAGS_COMMON} ${WALLC}"
                     export MPICHLIB_FCFLAGS="${DEBUGFLAGS_COMMON} ${WALLF}"
                     export MPICHLIB_FFLAGS="${DEBUGFLAGS_COMMON} ${WALLF}"
@@ -276,6 +276,7 @@ for OPTION in $CONFIG; do
                 ;;
                 exclusive)
                     SHARED_MEMORY=exclusive:posix
+                    #SHARED_MEMORY=exclusive:shmam
                     #SHARED_MEMORY=exclusive
                     ;;
                 *)
@@ -333,12 +334,15 @@ case ${LIBFABRIC} in
                               --enable-mxm=no       \
                               --enable-rxm=no       \
                               --enable-verbs=no     \
-                              --enable-sockets=yes  \
+                              --enable-sockets=no   \
                               --enable-rxm=no       \
+                              --enable-rxd=no       \
                               --enable-udp=no       \
                               --enable-psm2=no      \
                               --enable-psm2d=no     \
                               --enable-truescale=no \
+                              --enable-opa=yes      \
+                              --enable-embedded     \
                              "
     ;;
     *)
@@ -347,8 +351,8 @@ case ${LIBFABRIC} in
 esac
 
 export OFI_NETMOD_ARGS=${OFI_NETMOD_ARGS}:no-data
-export INSTALL_DIR=/home/cjarcher/code/install/${COMPILER}/${CONFIG}
 export OFI_NETMOD_ARGS=$(echo ${OFI_NETMOD_ARGS} | sed 's/^://g')
+export INSTALL_DIR=/home/cjarcher/code/install/${COMPILER}/${CONFIG}
 export CROSSFILE=${MPICH2DIR}/src/mpid/ch4/cross/gcc-linux-x86-8
 export SCAN_BUILD=${SCAN_BUILD}
 

@@ -12,13 +12,13 @@ done
 echo ""
 
 
-for HOST in "${HOSTS_ARRAY[@]}"; do
-    echo -n "${HOST} :" #=${HOST_AVAILABLE[${HOST}]}
-    cmd="ssh ${HOST} 'sh ~/killall.sh'"
-    echo $cmd
-    eval $cmd &
-done
-wait
+#for HOST in "${HOSTS_ARRAY[@]}"; do
+#    echo -n "${HOST} :" #=${HOST_AVAILABLE[${HOST}]}
+#    cmd="ssh ${HOST} 'sh ~/killall.sh'"
+#    echo $cmd
+#    eval $cmd &
+#done
+#wait
 
 for HOST in "${HOSTS_ARRAY[@]}"; do
     echo -n "${HOST} :" #=${HOST_AVAILABLE[${HOST}]}
