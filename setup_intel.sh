@@ -1,7 +1,8 @@
 #!/bin/sh
 
+#export LD="xild -qlink-name=/home/cjarcher/tools/x86/bin/ld"
 export AR=xiar
-export LD="xild -qlink-name=/home/cjarcher/tools/x86/bin/ld"
+export LD="xild"
 export CC=icc
 export CXX=icpc
 export F77=ifort
@@ -11,17 +12,13 @@ export FC=ifort
 export HASWELL_OPT="-xCORE-AVX2 -fma"
 export SILVERMONT_OPT="-xATOM_SSE4.2"
 export KNL_OPT="-xMIC-AVX512 -DHAVE_AVX512"
-export GENERIC_OPT="-msse2 -msse4.2 -mcrc32 -mavx2 -mtune=generic"
+export GENERIC_OPT="-march=core-avx2 -mtune=generic"
 
 ###################################
 #export CPU_OPT=${GENERIC_OPT}
 #export CPU_OPT=${SILVERMONT_OPT}
 #export CPU_OPT=${KNL_OPT}
 export CPU_OPT=${GENERIC_OPT}
-export AR=xiar
-export LD=xild
-export CC=icc
-export CXX=icpc
 export EXTRA_OPT="-falign-functions=16"
 export EXTRA_OPT="${EXTRA_OPT} -ipo"
 export EXTRA_OPT="${EXTRA_OPT} -inline-factor=10000"

@@ -4,8 +4,8 @@ if /bin/false ; then
     export AR='/home/cjarcher/tools/x86/bin/clang-ar'
     export NM='nm --plugin /home/cjarcher/tools/x86/lib/LLVMgold.so'
     export LD='/home/cjarcher/tools/x86/bin/ld --plugin /home/cjarcher/tools/x86/lib/LLVMgold.so'
-    export CC='clang --gcc-toolchain=/opt/rh/devtoolset-3/root/usr/'
-    export CXX='clang++ --gcc-toolchain=/opt/rh/devtoolset-3/root/usr/'
+    export CC='clang --gcc-toolchain=/opt/rh/devtoolset-4/root/usr/'
+    export CXX='clang++ --gcc-toolchain=/opt/rh/devtoolset-4/root/usr/'
     export F77="gfortran"
     export FC="gfortran"
     export EXTRA_DEBUG=""
